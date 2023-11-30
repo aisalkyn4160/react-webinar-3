@@ -8,11 +8,17 @@ function Item(props) {
   // Счётчик выделений
   const [count, setCount] = useState(0);
 
+  const handleAddToCart = () => {
+    props.onAdd();
+    setCount(count + 1);
+    
+  }
+
   const callbacks = {
     onClick: () => {
       props.onSelect(props.item.code);
       if (!props.item.selected) {
-        setCount(count + 1);
+        setCount((count + 1));
       }
     },
     onDelete: (e) => {
@@ -27,16 +33,16 @@ function Item(props) {
          onClick={callbacks.onClick}>
       <div className='Item-code'>{props.item.code}</div>
       <div className='Item-title'>
-        {props.item.title} {count ? ` | Выделяли ${count} ${plural(count, {
-        one: 'раз',
-        few: 'раза',
-        many: 'раз'
-      })}` : ''}
+        {props.item.title} {count ? `${count * props.item.price} ` : ''}
+      </div>
+      <div className='Item-price'>
+        {props.item.price} ₽
       </div>
       <div className='Item-actions'>
-        <button onClick={callbacks.onDelete}>
+        {/* <button onClick={callbacks.onDelete}>
           Удалить
-        </button>
+        </button> */}
+        <button onClick={handleAddToCart}>Добавить</button>
       </div>
     </div>
   );
@@ -58,6 +64,14 @@ Item.defaultProps = {
   },
   onSelect: () => {
   },
+}
+
+Item.propTypes = {
+  onAdd: PropTypes.func
+};
+
+Item.defaultProps = {
+  onAdd: () => {}
 }
 
 export default React.memo(Item);
